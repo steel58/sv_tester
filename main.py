@@ -10,11 +10,14 @@ def main():
     args = parser.parse_args()
     result = subprocess.run(f'vsim -c -do {args.filepath}', capture_output=True, text=True)
     lines = result.stdout.split('\n')
-    output_filter = "^# (Loading|do|Model|Start|End| {3}Time:|Break in Module|vlog|\n|Top|\t)|vlib-34|\$stop"
+    output_filter = "^# (Loading|do|Model|Start|End| {3}Time:|Break in Module|vlog|Top|10.5b)|vlib-34|\$stop|^# $|Reading C:"
     for line in lines:
         useless = re.search(output_filter, line)
         if useless is None:
             print(line)
+            if line.startswith("# Errors: "):
+                print()
+
 
 
 main()
